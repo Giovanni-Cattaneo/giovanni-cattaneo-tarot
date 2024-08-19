@@ -125,7 +125,7 @@ export default {
           name: "La Temperanza",
           retro: "retro.png",
           img: "temperanza.png",
-          up: false,
+          up: true,
           upMeaning: "La Temperanza rappresenta equilibrio, moderazione e armonia. Simboleggia l'arte di trovare il giusto equilibrio tra opposti e di mantenere la calma e la pace interiore. Questa carta indica la necessità di evitare gli estremi e di adottare un approccio equilibrato nelle situazioni della vita. La Temperanza celebra l'armonia e la capacità di gestire le sfide con equilibrio e serenità.",
           downMeaning: "Quando appare capovolta, La Temperanza può indicare squilibrio, eccesso o conflitto interiore. Può suggerire che ci sia una difficoltà a mantenere la calma e l'armonia nelle proprie situazioni. Questa carta capovolta può segnalare un momento di disarmonia e la necessità di rivedere il proprio approccio per trovare un equilibrio più sano e gestire le tensioni in modo più efficace."
         },
@@ -133,7 +133,7 @@ export default {
           name: "Il Diavolo",
           retro: "retro.png",
           img: "diavolo.png",
-          up: false,
+          up: true,
           upMeaning: "Il Diavolo simboleggia tentazione, attaccamento e materialismo. Rappresenta le influenze negative e i vincoli autoimposti che possono limitare la propria libertà. Questa carta indica la necessità di affrontare le proprie dipendenze e i propri attaccamenti materiali, e di liberarsi dalle catene che impediscono una crescita autentica. Il Diavolo può anche mettere in luce le ombre e le paure interiori che richiedono attenzione e risoluzione.",
           downMeaning: "Capovolta, Il Diavolo può indicare liberazione da vincoli, risoluzione di dipendenze o superamento delle tentazioni. Può suggerire che si stia lavorando per liberarsi dalle influenze negative e per recuperare la propria libertà e indipendenza. Questa carta capovolta può segnalare un periodo di recupero e di crescita personale, dove si affrontano le proprie paure e si trova un nuovo equilibrio."
         },
@@ -141,7 +141,7 @@ export default {
           name: "La Torre",
           retro: "retro.png",
           img: "torre.png",
-          up: false,
+          up: true,
           upMeaning: "La Torre rappresenta rovinamento, cambiamento improvviso e rivelazione. Simboleggia la demolizione di strutture obsolete e la necessità di affrontare la verità anche quando è scomoda. Questa carta indica che un cambiamento radicale può portare a una nuova comprensione e a una trasformazione significativa. La Torre celebra il potere della rivelazione e della ricostruzione attraverso la distruzione di ciò che non serve più.",
           downMeaning: "Quando appare capovolta, La Torre può indicare resistenza al cambiamento, instabilità o una crisi evitata. Può suggerire che si stia tentando di evitare il crollo di strutture obsolete o che si stia procrastinando una necessaria trasformazione. Questa carta capovolta può segnalare un bisogno di affrontare i cambiamenti inevitabili e di prepararsi a rivedere le proprie strutture e convinzioni per evitare problemi futuri."
         },
@@ -149,7 +149,7 @@ export default {
           name: "Le Stelle",
           retro: "retro.png",
           img: "stelle.png",
-          up: false,
+          up: true,
           upMeaning: "Le Stelle simboleggiano speranza, ispirazione e serenità. Rappresentano la luce guida nelle tenebre e la promessa di un futuro migliore. Questa carta indica un periodo di guarigione, creatività e ottimismo, e celebra la capacità di trovare bellezza e significato anche nei momenti difficili. Le Stelle invitano a mantenere la fede e a cercare la luce che guida verso nuovi orizzonti e opportunità.",
           downMeaning: "Capovolta, Le Stelle possono indicare disperazione, mancanza di speranza o blocchi creativi. Può suggerire che ci sia una difficoltà a vedere il lato positivo delle situazioni o a mantenere la fede nei propri sogni. Questa carta capovolta può segnalare un momento di incertezza e la necessità di ritrovare la speranza e l'ispirazione per superare le sfide e recuperare la serenità."
         },
@@ -183,6 +183,11 @@ export default {
   },
   methods: {
     show(card) {
+      if (this.getRandomInt(2) === 0) {
+        card.up = true
+      } else {
+        card.up = false
+      }
       console.log(card.name, card.upMeaning)
       this.flipCards.push(card)
       card.retro = card.img
@@ -197,6 +202,10 @@ export default {
         const j = Math.floor(Math.random() * (i + 1));
         [cards[i], cards[j]] = [cards[j], cards[i]];
       }
+    },
+
+    getRandomInt(max) {
+      return Math.floor(Math.random() * max);
     }
   },
   created() {
