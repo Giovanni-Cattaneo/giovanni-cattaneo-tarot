@@ -1,32 +1,20 @@
 <script>
 
+import AppCard from './components/appCard.vue';
 import { state } from './state.js'
 
 export default {
   components: {
-
+    AppCard
   },
   data() {
     return {
       state: state,
       isPlaying: false,
-      flipCards: [],
-      over: true,
+      volume: 0.5,
     }
   },
   methods: {
-    show(card) {
-      if (this.getRandomInt(2) === 0) {
-        card.up = true
-      } else {
-        card.up = false
-      }
-      this.flipCards.push(card)
-      card.retro = card.img
-      if (this.flipCards.length === 3) {
-        this.over = false
-      }
-    },
     toggleMusic() {
       const audio = this.$refs.backgroundMusic;
       if (this.isPlaying) {
@@ -38,23 +26,25 @@ export default {
     },
     updateVolume() {
       const audio = this.$refs.backgroundMusic;
-      audio.volume = this.volume; // Aggiorna il volume dell'audio
+      audio.volume = this.volume; // To update the volume
     },
 
-    shuffle(cards) {
+    shuffle(cards) { // function for random position
       for (let i = cards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [cards[i], cards[j]] = [cards[j], cards[i]];
       }
     },
 
-    getRandomInt(max) {
-      return Math.floor(Math.random() * max);
-    }
-  },
-  computed: {
-    limitedCards() {
-      return state.cards.slice(0, 3);
+    retry() {
+      this.state.cards.forEach(card => { // take every card and reset the img for retro and position
+        card.retro = 'retro.png';
+        card.up = false;
+      });
+      this.shuffle(this.state.cards); // shuffle again the deck
+      state.over = true;
+      state.value = 0;
+      state.flipCards = []; //make empty the array of flips
     }
   },
   created() {
@@ -72,79 +62,46 @@ export default {
     <p>The cards, the cards, just take three</p>
     <p>Take a little trip into your future with me</p>
   </div>
-  <div class="mod" v-show="!this.over">
-    <h2>Ecco la tua previsione</h2>
-    <div v-for="flipCard in this.flipCards">
+  <div class="container">
+    <div class="row d-flex">
+      <AppCard />
+    </div>
+  </div>
+  <div class="mod" v-show="!state.over">
+    <h2>Vediamo un pò cos'hai pescato</h2>
+    <div v-for="flipCard in state.flipCards">
       <p v-if="flipCard.up">{{ flipCard.upMeaning }}</p>
       <p v-else>{{ flipCard.downMeaning }}</p>
     </div>
-  </div>
-  <div class="container">
-    <div class="row d-flex">
-      <div class="col g-3" v-for="card in limitedCards" :key="card.name">
-        <div class="car" :class="{ reverse: !card.up }" @click="over ? show(card) : null">
-          <img class="img" :src="`${card.retro}`" alt="Title" />
-        </div>
-      </div>
-    </div>
+    <h4 v-if="state.value === 0">Sembra che il tuo destino non penda ne da una parte ne dall'altra, che noia</h4>
+    <h4 v-else-if="state.value === -3">La tua sfortuna ha bisogno di un altra mano amico mio, o forse dovrei dire
+      l'ultima mano</h4>
+    <h4 v-else-if="state.value === 3">Lo sguardo della beata luna è su di te amico mio la tua sorte è magnifica</h4>
+    <h4 v-else-if="state.value > 0">Sembra che la fortuna ti sorrida amico mio che invidia</h4>
+    <h4 v-else>Il fato non ti arride amico mio ma come si dice meglio a te che a me no?</h4>
   </div>
   <div class="audio">
     <button class="play" @click="toggleMusic">{{ isPlaying ? 'Stop Music' : 'Play Music' }}</button>
     <!-- Elemento audio -->
     <audio ref="backgroundMusic" src="/witch.mp3" loop></audio>
     <label for="volumeControl">Volume:</label>
-    <input id="volumeControl" type="range" min="0" max="1" step="0.01" @input="updateVolume" />
+    <input id="volumeControl" type="range" min="0" max="1" step="0.01" v-model="volume" @input="updateVolume" />
+    <button class="retry" @click="retry">Retry</button>
   </div>
 </template>
 
 <style>
-/* .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #b9bcf5aa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-} */
-.car {
-  margin-top: 35rem;
-}
-
-.img {
-  width: 288px;
-  height: 400px;
-  object-fit: contain;
-  margin: auto;
-  will-change: filter;
-  transition: filter 300ms;
-
-}
-
-.img:hover {
-  filter: drop-shadow(0 0 2em #b9bcf5aa);
-}
-
 .mod {
   color: goldenrod;
   background-color: antiquewhite;
   border-radius: 1rem;
   position: absolute;
   z-index: 15;
-  width: 800px;
-  top: 12rem;
-  right: 5rem;
+  width: 850px;
+  top: 8rem;
+  right: 1.5rem;
   padding: 0.3rem;
 
-}
-
-.reverse {
-  transform: rotate(180deg);
 }
 
 .rules {
@@ -162,9 +119,11 @@ export default {
 
 .audio {
   position: absolute;
-  top: 2rem;
-  right: 5rem;
+  top: 20rem;
+  left: 5rem;
   display: flex;
+  gap: 0.5rem;
   flex-direction: column;
+  color: white;
 }
 </style>
