@@ -215,6 +215,19 @@ export default {
 </script>
 
 <template>
+  <h1>Tenta la fortuna</h1>
+  <div class="rules">
+    <h3>Regolamento</h3>
+    <p>La pesca a tre nei tarocchi prevede la possibilità di pescare solo tre carte tra tutte</p>
+    <p>Prima Carta: La prima carta rappresenta il passato o la causa della situazione attuale. Indica le influenze o gli
+      eventi passati che hanno portato alla situazione presente.</p>
+
+    <p>Seconda Carta: La seconda carta rappresenta il presente o la situazione attuale. Riflette l’attuale stato della
+      questione o la condizione in cui ti trovi ora.</p>
+
+    <p>Terza Carta: La terza carta rappresenta il futuro o il risultato previsto. Indica la direzione futura della
+      situazione o le possibili conclusioni.</p>
+  </div>
   <div class="mod" v-show="!over">
     <h2>Ecco la tua previsione</h2>
     <div v-for="flipCard in this.flipCards">
@@ -226,7 +239,7 @@ export default {
     <div class="row d-flex">
       <div class="col-3 g-3" v-for="card in cards" :key="card.name">
         <div class="car" :class="{ reverse: !card.up }" @click="over ? show(card) : null">
-          <img class="card-img-top" :src="`${card.retro}`" alt="Title" />
+          <img class="img" :src="`${card.retro}`" alt="Title" />
         </div>
       </div>
     </div>
@@ -249,12 +262,12 @@ export default {
   filter: drop-shadow(0 0 2em #42b883aa);
 } */
 
-.col-3 {}
-
-.car {
-  .card-img-top {
-    height: 100%;
-  }
+.img {
+  width: 288px;
+  height: 400px;
+  /* Imposta un'altezza fissa */
+  object-fit: contain;
+  margin: auto;
 }
 
 .mod {
@@ -263,5 +276,14 @@ export default {
 
 .reverse {
   transform: rotate(180deg);
+}
+
+.rules {
+  position: absolute;
+  right: 2rem;
+  top: 5rem;
+  width: 250px;
+  color: white;
+  border: 1px solid goldenrod;
 }
 </style>
