@@ -1,5 +1,7 @@
 <script>
 
+
+
 export default {
   components: {
 
@@ -8,6 +10,7 @@ export default {
     return {
       flipCards: [],
       over: true,
+      isPlaying: false,
       cards: [
         {
           name: "Il Matto",
@@ -196,6 +199,19 @@ export default {
         this.over = false
       }
     },
+    toggleMusic() {
+      const audio = this.$refs.backgroundMusic;
+      if (this.isPlaying) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
+      this.isPlaying = !this.isPlaying;
+    },
+    updateVolume() {
+      const audio = this.$refs.backgroundMusic;
+      audio.volume = this.volume; // Aggiorna il volume dell'audio
+    },
 
     shuffle(cards) {
       for (let i = cards.length - 1; i > 0; i--) {
@@ -222,16 +238,11 @@ export default {
 
 <template>
   <div class="rules">
-    <h3>Regolamento</h3>
-    <p>La pesca a tre nei tarocchi prevede la possibilità di pescare solo tre carte tra tutte</p>
-    <p>Prima Carta: La prima carta rappresenta il passato o la causa della situazione attuale. Indica le influenze o gli
-      eventi passati che hanno portato alla situazione presente.</p>
-
-    <p>Seconda Carta: La seconda carta rappresenta il presente o la situazione attuale. Riflette l’attuale stato della
-      questione o la condizione in cui ti trovi ora.</p>
-
-    <p>Terza Carta: La terza carta rappresenta il futuro o il risultato previsto. Indica la direzione futura della
-      situazione o le possibili conclusioni.</p>
+    <h3>Rules</h3>
+    <p>The cards, the cards, the cards will tell </p>
+    <p>The past, the present and the future as well</p>
+    <p>The cards, the cards, just take three</p>
+    <p>Take a little trip into your future with me</p>
   </div>
   <div class="mod" v-show="!over">
     <h2>Ecco la tua previsione</h2>
@@ -243,11 +254,18 @@ export default {
   <div class="container">
     <div class="row d-flex">
       <div class="col g-3" v-for="card in limitedCards" :key="card.name">
-        <div class="car" :class="{ reverse: !card.up, none: cards.length > 57 }" @click="over ? show(card) : null">
+        <div class="car" :class="{ reverse: !card.up }" @click="over ? show(card) : null">
           <img class="img" :src="`${card.retro}`" alt="Title" />
         </div>
       </div>
     </div>
+  </div>
+  <div class="audio">
+    <button class="play" @click="toggleMusic">{{ isPlaying ? 'Stop Music' : 'Play Music' }}</button>
+    <!-- Elemento audio -->
+    <audio ref="backgroundMusic" src="/witch.mp3" loop></audio>
+    <label for="volumeControl">Volume:</label>
+    <input id="volumeControl" type="range" min="0" max="1" step="0.01" v-model="volume" @input="updateVolume" />
   </div>
 </template>
 
@@ -266,6 +284,9 @@ export default {
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 } */
+.car {
+  margin-top: 35rem;
+}
 
 .img {
   width: 288px;
@@ -274,6 +295,7 @@ export default {
   margin: auto;
   will-change: filter;
   transition: filter 300ms;
+
 }
 
 .img:hover {
@@ -284,6 +306,12 @@ export default {
   color: goldenrod;
   background-color: antiquewhite;
   border-radius: 1rem;
+  position: absolute;
+  z-index: 15;
+  width: 800px;
+  top: 12rem;
+  right: 5rem;
+  padding: 0.3rem;
 
 }
 
@@ -293,9 +321,9 @@ export default {
 
 .rules {
   position: absolute;
-  right: 2rem;
+  left: 2rem;
   top: 5rem;
-  width: 250px;
+  width: 350px;
   color: white;
   border: 1px solid goldenrod;
 }
@@ -304,5 +332,11 @@ export default {
   display: none;
 }
 
-.background {}
+.audio {
+  position: absolute;
+  top: 2rem;
+  right: 5rem;
+  display: flex;
+  flex-direction: column;
+}
 </style>
