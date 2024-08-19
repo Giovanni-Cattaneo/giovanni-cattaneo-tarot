@@ -208,14 +208,19 @@ export default {
       return Math.floor(Math.random() * max);
     }
   },
+  computed: {
+    limitedCards() {
+      return this.cards.slice(0, 3);
+    }
+  },
   created() {
     this.shuffle(this.cards)
-  }
+  },
+
 }
 </script>
 
 <template>
-  <h1>Tenta la fortuna</h1>
   <div class="rules">
     <h3>Regolamento</h3>
     <p>La pesca a tre nei tarocchi prevede la possibilità di pescare solo tre carte tra tutte</p>
@@ -237,8 +242,8 @@ export default {
   </div>
   <div class="container">
     <div class="row d-flex">
-      <div class="col-3 g-3" v-for="card in cards" :key="card.name">
-        <div class="car" :class="{ reverse: !card.up }" @click="over ? show(card) : null">
+      <div class="col g-3" v-for="card in limitedCards" :key="card.name">
+        <div class="car" :class="{ reverse: !card.up, none: cards.length > 57 }" @click="over ? show(card) : null">
           <img class="img" :src="`${card.retro}`" alt="Title" />
         </div>
       </div>
@@ -265,13 +270,21 @@ export default {
 .img {
   width: 288px;
   height: 400px;
-  /* Imposta un'altezza fissa */
   object-fit: contain;
   margin: auto;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.img:hover {
+  filter: drop-shadow(0 0 2em #b9bcf5aa);
 }
 
 .mod {
-  color: white;
+  color: goldenrod;
+  background-color: antiquewhite;
+  border-radius: 1rem;
+
 }
 
 .reverse {
@@ -286,4 +299,10 @@ export default {
   color: white;
   border: 1px solid goldenrod;
 }
+
+.none {
+  display: none;
+}
+
+.background {}
 </style>

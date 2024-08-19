@@ -69,6 +69,10 @@ button:focus-visible {
   text-align: center;
 }
 
+.background {
+  position: absolute;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
